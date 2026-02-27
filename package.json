@@ -9,7 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
     "axios": "^1.13.5",
+    "bcrypt": "^6.0.0",
+    "google-auth-library": "^10.6.1",
     "next": "16.1.6",
     "razorpay": "^2.9.6",
     "react": "19.2.3",
