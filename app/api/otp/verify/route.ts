@@ -99,6 +99,7 @@ export async function POST(req: NextRequest) {
           body: {
             id: userData.id,
             is_active: 1,
+            last_login: new Date().toISOString(),
           },
         });
         userData.is_active = 1;
@@ -110,10 +111,17 @@ export async function POST(req: NextRequest) {
           phone_verified: 1,
           registered_source: "Phone",
           is_active: 1,
+          role: "BUYER",
+          last_login: new Date().toISOString(),
         },
       });
       let userDataObj: any = {
+        email: "",
+        name: "",
+        avatar: "",
         phone: dbPhone,
+        registered_source: "Phone",
+        role: "BUYER",
         is_active: 1,
       };
       if (createResp?.result?.lastInsertID) {
