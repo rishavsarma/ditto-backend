@@ -1,14 +1,14 @@
-import { randomInt } from "crypto";
-import axios from "axios";
-import { NextRequest, NextResponse } from "next/server";
+import Api from "@/app/functions/Api";
+import { hashOTP } from "@/lib/hash";
 import {
   normalizePhone,
   PHONE_REGEX,
   safeParseBody,
   verifyDomain,
 } from "@/lib/verifyDomain";
-import Api from "@/app/functions/Api";
-import { hashOTP } from "@/lib/hash";
+import axios from "axios";
+import { randomInt } from "crypto";
+import { NextRequest, NextResponse } from "next/server";
 
 const API_URL = "http://japi.instaalerts.zone/httpapi/QueryStringReceiver";
 const SENDER = "DITTOO";
@@ -58,6 +58,30 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const recentOtpData: any = await Api.get("/otp-verifications", {
+      search: `identifier:${dbPhone},type:login,verified:0`,
+      sort: "-created_at",
+    });
+
+    if (
+      recentOtpData &&
+      recentOtpData.result &&
+      recentOtpData.result.length > 0
+    ) {
+      const record = recentOtpData.result[0];
+      const expiresString =
+        record.expires_at.replace(" ", "T") +
+        (record.expires_at.includes("Z") ? "" : "Z");
+      const expiresTime = new Date(expiresString).getTime();
+
+      if (Date.now() <= expiresTime) {
+        return NextResponse.json(
+          { success: false, error: "Your previous otp is still active." },
+          { status: 400 },
+        );
+      }
+    }
+
     const otp = generateOTP();
     const text = `Hi,your OTP code iss ${otp}. Enter this code to confirm your mobile number in https://dittoapp.in -DITTOAPPIN`;
 
