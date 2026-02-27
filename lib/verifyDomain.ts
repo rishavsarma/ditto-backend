@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const ALLOWED_ORIGINS = [
   "https://buyer.minfy.dev",
+  "https://ditto-buyer.netlify.app",
   // Add more origin URLs here as needed
 ];
 export const PHONE_REGEX = /^91[6-9]\d{9}$/;
