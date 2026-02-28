@@ -90,9 +90,6 @@ function getKey(method: HttpMethod, url: string, options: RequestOptions) {
     if ("sql" in options.body) {
       request["sql"] = options.body.sql;
     }
-    if (url.startsWith("/auth-")) {
-      request["body"] = JSON.stringify(options.body);
-    }
   }
 
   let tokenStr = method + ">" + _url;
